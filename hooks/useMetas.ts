@@ -583,16 +583,18 @@ export function useDeleteObjetivo() {
 
 export function useMoverObjetivo() {
   const queryClient = useQueryClient()
+  const { user } = useAuth()
 
   return useMutation({
     mutationFn: moverObjetivo,
     onMutate: async ({ id, coluna_id, status, ordem }) => {
-      await queryClient.cancelQueries({ queryKey: OBJETIVOS_KEY })
+      const queryKey = [...OBJETIVOS_KEY, user?.id]
+      await queryClient.cancelQueries({ queryKey })
 
       const previousObjetivos =
-        queryClient.getQueryData<Objetivo[]>(OBJETIVOS_KEY)
+        queryClient.getQueryData<Objetivo[]>(queryKey)
 
-      queryClient.setQueryData<Objetivo[]>(OBJETIVOS_KEY, (old) => {
+      queryClient.setQueryData<Objetivo[]>(queryKey, (old) => {
         if (!old) return old
 
         return old.map((objetivo) =>
@@ -607,11 +609,11 @@ export function useMoverObjetivo() {
         )
       })
 
-      return { previousObjetivos }
+      return { previousObjetivos, queryKey }
     },
     onError: (_err, _variables, context) => {
-      if (context?.previousObjetivos) {
-        queryClient.setQueryData(OBJETIVOS_KEY, context.previousObjetivos)
+      if (context?.previousObjetivos && context?.queryKey) {
+        queryClient.setQueryData(context.queryKey, context.previousObjetivos)
       }
     },
     onSettled: () => {

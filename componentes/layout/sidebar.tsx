@@ -3,15 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-  Bell,
-  LogOut,
-  Moon,
-  PanelLeft,
-  Sun,
-  UserRound,
-} from "lucide-react"
-import { useTheme } from "next-themes"
+import { PanelLeft } from "lucide-react"
 
 import { Botao } from "@/componentes/ui/botao"
 import { Colapsavel, ColapsavelGatilho } from "@/componentes/ui/colapsavel"
@@ -21,15 +13,7 @@ import {
   DicaGatilho,
   ProvedorDica,
 } from "@/componentes/ui/dica"
-import {
-  MenuSuspenso,
-  MenuSuspensoConteudo,
-  MenuSuspensoGatilho,
-  MenuSuspensoItem,
-  MenuSuspensoSeparador,
-} from "@/componentes/ui/menu-suspenso"
 import { cn } from "@/lib/utilidades"
-import { useAuth } from "@/lib/providers/auth-provider"
 import { marcaSidebar, secoesMenu, rotaAtiva } from "@/lib/navegacao"
 
 interface SidebarProps {
@@ -39,65 +23,6 @@ interface SidebarProps {
 
 export function Sidebar({ open, onOpenChange }: SidebarProps) {
   const pathname = usePathname()
-  const { resolvedTheme, setTheme } = useTheme()
-  const { user, signOut } = useAuth()
-  const temaEscuro = resolvedTheme === "dark"
-
-  const alternarTema = React.useCallback(() => {
-    setTheme(temaEscuro ? "light" : "dark")
-  }, [temaEscuro, setTheme])
-
-  const nomeUsuario =
-    user?.user_metadata?.full_name ||
-    user?.email?.split("@")[0] ||
-    "Usuário"
-  const iniciaisUsuario = nomeUsuario
-    .split(" ")
-    .map((parte: string) => parte[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase()
-
-  const toggleTemaClasses = cn(
-    "inline-flex h-5 w-9 items-center rounded-full border border-sidebar-border p-0.5 transition-colors",
-    temaEscuro ? "bg-sidebar-foreground" : "bg-sidebar-accent"
-  )
-  const togglePinoClasses = cn(
-    "h-4 w-4 rounded-full bg-sidebar transition-transform",
-    temaEscuro ? "translate-x-4" : "translate-x-0"
-  )
-
-  const perfilGatilho = (
-    <MenuSuspensoGatilho asChild>
-      <Botao
-        variant="ghost"
-        size="default"
-        aria-label="Abrir menu do usuário"
-        className={cn(
-          "text-sm font-semibold text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-          open
-            ? "w-full justify-start gap-3 px-3"
-            : "h-10 w-10 justify-center px-0"
-        )}
-      >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-[10px] font-semibold text-sidebar-accent-foreground">
-          {iniciaisUsuario}
-        </div>
-        <span
-          aria-hidden={!open}
-          className={cn(
-            "block min-w-0 truncate whitespace-nowrap transition-[max-width,opacity,transform] duration-300",
-            open
-              ? "max-w-[140px] opacity-100 translate-x-0"
-              : "max-w-0 opacity-0 -translate-x-2"
-          )}
-        >
-          {nomeUsuario}
-        </span>
-        {!open ? <span className="sr-only">{nomeUsuario}</span> : null}
-      </Botao>
-    </MenuSuspensoGatilho>
-  )
 
   return (
     <Colapsavel
@@ -150,7 +75,7 @@ export function Sidebar({ open, onOpenChange }: SidebarProps) {
                 <DicaConteudo
                   side="right"
                   sideOffset={8}
-                  className="rounded-full bg-foreground px-3 py-1 text-xs font-medium text-background"
+                  className="rounded-full bg-[#F26B2A] px-3 py-1 text-xs font-medium text-white"
                 >
                   Fechar barra lateral
                 </DicaConteudo>
@@ -173,7 +98,7 @@ export function Sidebar({ open, onOpenChange }: SidebarProps) {
               <DicaConteudo
                 side="right"
                 sideOffset={8}
-                className="rounded-full bg-foreground px-3 py-1 text-xs font-medium text-background"
+                className="rounded-full bg-[#F26B2A] px-3 py-1 text-xs font-medium text-white"
               >
                 Abrir barra lateral
               </DicaConteudo>
@@ -209,8 +134,8 @@ export function Sidebar({ open, onOpenChange }: SidebarProps) {
                             ? "justify-start gap-3 px-3"
                             : "justify-center gap-0 px-0",
                           ativo
-                            ? "bg-sidebar-accent text-sidebar-primary"
-                            : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                            ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                            : "text-sidebar-foreground/70 hover:bg-sidebar-foreground/5 hover:text-sidebar-foreground"
                         )}
                       >
                         <item.icone
@@ -248,7 +173,7 @@ export function Sidebar({ open, onOpenChange }: SidebarProps) {
                         <DicaConteudo
                           side="right"
                           sideOffset={10}
-                          className="rounded-full bg-foreground px-3 py-1 text-xs font-medium text-background"
+                          className="rounded-full bg-[#F26B2A] px-3 py-1 text-xs font-medium text-white"
                         >
                           {item.titulo}
                         </DicaConteudo>
@@ -265,84 +190,6 @@ export function Sidebar({ open, onOpenChange }: SidebarProps) {
               </div>
             ))}
           </nav>
-
-          {/* Footer - User profile */}
-          <div className={cn("mt-auto", open ? "px-3" : "px-2")}>
-            <div className="h-px bg-sidebar-border" />
-            <div
-              className={cn(
-                "mt-3 flex flex-col gap-2",
-                open ? "px-0" : "items-center"
-              )}
-            >
-              <MenuSuspenso>
-                {perfilGatilho}
-                <MenuSuspensoConteudo
-                  side="top"
-                  align="start"
-                  sideOffset={8}
-                  className="w-56 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
-                >
-                  <MenuSuspensoItem className="cursor-pointer gap-2 font-medium">
-                    <Bell
-                      className="h-4 w-4 text-muted-foreground"
-                      aria-hidden="true"
-                    />
-                    Notificações
-                  </MenuSuspensoItem>
-                  <MenuSuspensoItem
-                    onSelect={(event) => {
-                      event.preventDefault()
-                      alternarTema()
-                    }}
-                    className="flex cursor-pointer items-center justify-between font-medium"
-                  >
-                    <span className="flex items-center gap-2">
-                      {temaEscuro ? (
-                        <Moon
-                          className="h-4 w-4 text-muted-foreground"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <Sun
-                          className="h-4 w-4 text-muted-foreground"
-                          aria-hidden="true"
-                        />
-                      )}
-                      Tema
-                    </span>
-                    <span aria-hidden="true" className={toggleTemaClasses}>
-                      <span className={togglePinoClasses} />
-                    </span>
-                  </MenuSuspensoItem>
-                  <MenuSuspensoItem
-                    asChild
-                    className="cursor-pointer gap-2 font-medium"
-                  >
-                    <Link
-                      href="/perfil"
-                      className="flex w-full items-center gap-2"
-                      aria-label="Ir para perfil do usuário"
-                    >
-                      <UserRound
-                        className="h-4 w-4 text-muted-foreground"
-                        aria-hidden="true"
-                      />
-                      Perfil
-                    </Link>
-                  </MenuSuspensoItem>
-                  <MenuSuspensoSeparador />
-                  <MenuSuspensoItem
-                    onSelect={signOut}
-                    className="cursor-pointer gap-2 font-medium text-destructive focus:text-destructive"
-                  >
-                    <LogOut className="h-4 w-4" aria-hidden="true" />
-                    Sair
-                  </MenuSuspensoItem>
-                </MenuSuspensoConteudo>
-              </MenuSuspenso>
-            </div>
-          </div>
         </div>
       </ProvedorDica>
     </Colapsavel>

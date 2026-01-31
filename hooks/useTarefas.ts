@@ -230,17 +230,19 @@ export function useDeleteTarefa() {
 
 export function useMoverTarefa() {
   const queryClient = useQueryClient()
+  const { user } = useAuth()
 
   return useMutation({
     mutationFn: moverTarefa,
     onMutate: async ({ id, novoEstagio, novaOrdem }) => {
-      await queryClient.cancelQueries({ queryKey: TAREFAS_KEY })
+      const queryKey = [...TAREFAS_KEY, user?.id]
+      await queryClient.cancelQueries({ queryKey })
 
-      const previousTarefas = queryClient.getQueryData<Tarefa[]>(TAREFAS_KEY)
+      const previousTarefas = queryClient.getQueryData<Tarefa[]>(queryKey)
       const tarefaAnterior = previousTarefas?.find((t) => t.id === id)
       const estagioAnterior = tarefaAnterior?.coluna
 
-      queryClient.setQueryData<Tarefa[]>(TAREFAS_KEY, (old) => {
+      queryClient.setQueryData<Tarefa[]>(queryKey, (old) => {
         if (!old) return old
 
         return old.map((tarefa) =>
@@ -257,7 +259,7 @@ export function useMoverTarefa() {
         )
       })
 
-      return { previousTarefas, estagioAnterior }
+      return { previousTarefas, estagioAnterior, queryKey }
     },
     onSuccess: (_data, { novoEstagio }, context) => {
       if (context?.estagioAnterior && context.estagioAnterior !== novoEstagio) {
@@ -265,8 +267,8 @@ export function useMoverTarefa() {
       }
     },
     onError: (error, _variables, context) => {
-      if (context?.previousTarefas) {
-        queryClient.setQueryData(TAREFAS_KEY, context.previousTarefas)
+      if (context?.previousTarefas && context?.queryKey) {
+        queryClient.setQueryData(context.queryKey, context.previousTarefas)
       }
       toast.error('Erro ao mover tarefa', {
         description: error instanceof Error ? error.message : 'Tente novamente',

@@ -269,6 +269,18 @@ function ConteudoPaginaInicio() {
             </SecaoAnimada>
           )}
 
+          {/* Builder Assistant */}
+          {carregando ? (
+            <DivAnimada className="h-36 animate-pulse rounded-2xl bg-muted" />
+          ) : (
+            <SecaoAnimada>
+              <CartaoBriefing
+                nomeUsuario={primeiroNome}
+                mensagem={mensagemBriefing}
+              />
+            </SecaoAnimada>
+          )}
+
           {/* KPI Cards Row */}
           <SecaoAnimada className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Indicadores de desempenho">
             {carregando ? (
@@ -360,23 +372,16 @@ function ConteudoPaginaInicio() {
             )}
           </SecaoAnimada>
 
-          {/* Conquistas + Briefing Row */}
-          <SecaoAnimada className="grid gap-6 lg:grid-cols-2" aria-label="Conquistas e assistente">
-            {carregando ? (
-              <>
-                <EsqueletoCartao linhasConteudo={3} />
-                <EsqueletoCartao linhasConteudo={4} />
-              </>
-            ) : (
-              <>
-                <SecaoConquistas conquistas={conquistasRecentes} />
-                <CartaoBriefing
-                  nomeUsuario={primeiroNome}
-                  mensagem={mensagemBriefing}
-                />
-              </>
-            )}
-          </SecaoAnimada>
+          {/* Conquistas */}
+          {carregando ? (
+            <DivAnimada>
+              <EsqueletoCartao linhasConteudo={3} />
+            </DivAnimada>
+          ) : (
+            <SecaoAnimada aria-label="Conquistas recentes">
+              <SecaoConquistas conquistas={conquistasRecentes} />
+            </SecaoAnimada>
+          )}
         </div>
       </AnimacaoPagina>
 

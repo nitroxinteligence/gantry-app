@@ -91,7 +91,7 @@ export function FormularioTarefaDialogo({
                 onAtualizar({ titulo: event.target.value })
               }
               placeholder="Ex: Finalizar relatório"
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="h-10 w-full rounded-md border border-input bg-[#F5F5F5] px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:bg-muted"
             />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -108,7 +108,7 @@ export function FormularioTarefaDialogo({
                   onAtualizar({ prioridade: valor as Prioridade })
                 }
               >
-                <SeletorGatilho id={`prioridade-${idSufixo}`}>
+                <SeletorGatilho id={`prioridade-${idSufixo}`} className="bg-[#F5F5F5] dark:bg-muted">
                   <SeletorValor placeholder="Selecione" />
                 </SeletorGatilho>
                 <SeletorConteudo>
@@ -132,7 +132,7 @@ export function FormularioTarefaDialogo({
                     type="button"
                     variant="outline"
                     className={cn(
-                      "w-full justify-start text-left font-normal",
+                      "w-full justify-start text-left font-normal bg-[#F5F5F5] dark:bg-muted",
                       !formulario.dataVencimento &&
                         !formulario.prazo &&
                         "text-muted-foreground"
@@ -144,7 +144,7 @@ export function FormularioTarefaDialogo({
                       : formulario.prazo || "Selecionar data"}
                   </Botao>
                 </FlutuanteGatilho>
-                <FlutuanteConteudo className="w-auto p-0" align="start">
+                <FlutuanteConteudo className="w-auto p-2" align="start">
                   <Calendario
                     mode="single"
                     selected={formulario.dataVencimento}
@@ -176,7 +176,7 @@ export function FormularioTarefaDialogo({
                   onAtualizar({ categoria: event.target.value })
                 }
                 placeholder="Ex: Financeiro"
-                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="h-10 w-full rounded-md border border-input bg-[#F5F5F5] px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:bg-muted"
               />
             </div>
             <div className="space-y-2">
@@ -192,7 +192,7 @@ export function FormularioTarefaDialogo({
                   onAtualizar({ coluna: valor as Estagio })
                 }
               >
-                <SeletorGatilho id={`estagio-${idSufixo}`}>
+                <SeletorGatilho id={`estagio-${idSufixo}`} className="bg-[#F5F5F5] dark:bg-muted">
                   <SeletorValor placeholder="Selecione" />
                 </SeletorGatilho>
                 <SeletorConteudo>
@@ -219,7 +219,7 @@ export function FormularioTarefaDialogo({
                 onAtualizar({ descricao: event.target.value })
               }
               placeholder="Observacoes rapidas sobre a tarefa..."
-              className="min-h-[90px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="min-h-[90px] w-full rounded-md border border-input bg-[#F5F5F5] px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:bg-muted"
             />
           </div>
         </form>

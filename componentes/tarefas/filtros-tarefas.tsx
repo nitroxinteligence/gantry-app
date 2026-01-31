@@ -129,13 +129,9 @@ export function FiltrosTarefas({
             placeholder="Buscar tarefas"
             value={buscaTarefa}
             onChange={(e) => onBuscaChange(e.target.value)}
-            className="h-9 w-52 rounded-md border border-input bg-background pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-9 w-52 rounded-md border border-input bg-white pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:bg-card"
           />
         </div>
-
-        <Botao variant="ghost" size="icon" aria-label="Configuracoes">
-          <Settings className="h-4 w-4" />
-        </Botao>
 
         {/* Modal Pendencias */}
         <DialogoPendencias
@@ -173,6 +169,10 @@ export function FiltrosTarefas({
             </DialogoGatilho>
           }
         />
+
+        <Botao variant="ghost" size="icon" aria-label="Configuracoes">
+          <Settings className="h-4 w-4" />
+        </Botao>
 
         {/* Modal Edicao */}
         <FormularioTarefaDialogo
@@ -237,7 +237,7 @@ function DialogoPendencias({
   return (
     <Dialogo open={aberto} onOpenChange={setAberto}>
       <DialogoGatilho asChild>
-        <Botao variant="outline">
+        <Botao variant="outline" className="bg-white dark:bg-card">
           Pendentes
           {pendencias.length > 0 && (
             <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-[10px] text-primary-foreground">

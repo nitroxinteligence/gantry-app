@@ -53,7 +53,7 @@ export function ConfiguracaoTimer({
             onValueChange={aoSelecionarTarefa}
             disabled={sessaoIniciada}
           >
-            <SeletorGatilho>
+            <SeletorGatilho className="bg-[#F5F5F5] dark:bg-muted">
               <SeletorValor placeholder="Selecione uma tarefa" />
             </SeletorGatilho>
             <SeletorConteudo>
@@ -88,7 +88,7 @@ export function ConfiguracaoTimer({
             onValueChange={aoSelecionarModo}
             disabled={sessaoIniciada}
           >
-            <SeletorGatilho>
+            <SeletorGatilho className="bg-[#F5F5F5] dark:bg-muted">
               <SeletorValor placeholder="Selecione o modo" />
             </SeletorGatilho>
             <SeletorConteudo>

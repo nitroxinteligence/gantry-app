@@ -38,7 +38,6 @@ export function CartaoKpi({
   valor,
   label,
   icone: Icone,
-  corIcone = "bg-secondary text-secondary-foreground",
   tendencia,
   progresso,
   indice = 0,
@@ -88,14 +87,7 @@ export function CartaoKpi({
             ) : null}
           </div>
         </div>
-        <div
-          className={cn(
-            "flex h-10 w-10 items-center justify-center rounded-xl",
-            corIcone
-          )}
-        >
-          <Icone className="h-5 w-5" />
-        </div>
+        <Icone className="h-4 w-4 shrink-0 text-muted-foreground" />
       </div>
       {progresso ? (
         <div className="mt-3 space-y-1.5">

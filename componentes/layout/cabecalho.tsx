@@ -3,14 +3,23 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { ChevronRight, Menu, Search, Star } from "lucide-react"
+import { Bell, ChevronRight, LogOut, Menu, Moon, Search, Star, Sun, UserRound } from "lucide-react"
+import { useTheme } from "next-themes"
 
 import { Avatar, AvatarFallback } from "@/componentes/ui/avatar"
 import { Botao } from "@/componentes/ui/botao"
 import { Entrada } from "@/componentes/ui/entrada"
+import {
+  MenuSuspenso,
+  MenuSuspensoConteudo,
+  MenuSuspensoGatilho,
+  MenuSuspensoItem,
+  MenuSuspensoSeparador,
+} from "@/componentes/ui/menu-suspenso"
 import { useAuth } from "@/lib/providers/auth-provider"
 import { obterBreadcrumbs, obterTituloPagina } from "@/lib/navegacao"
 import { DropdownNotificacoes } from "@/componentes/layout/dropdown-notificacoes"
+import { cn } from "@/lib/utilidades"
 import { useUserLevel } from "@/hooks/useDashboard"
 
 interface CabecalhoProps {
@@ -19,9 +28,15 @@ interface CabecalhoProps {
 
 export function Cabecalho({ onToggleSidebar }: CabecalhoProps) {
   const pathname = usePathname()
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
+  const { resolvedTheme, setTheme } = useTheme()
   const tituloPagina = obterTituloPagina(pathname)
   const breadcrumbs = obterBreadcrumbs(pathname)
+  const temaEscuro = resolvedTheme === "dark"
+
+  const alternarTema = React.useCallback(() => {
+    setTheme(temaEscuro ? "light" : "dark")
+  }, [temaEscuro, setTheme])
 
   const { data: userLevel } = useUserLevel()
 
@@ -35,6 +50,15 @@ export function Cabecalho({ onToggleSidebar }: CabecalhoProps) {
     .join("")
     .slice(0, 2)
     .toUpperCase()
+
+  const toggleTemaClasses = cn(
+    "inline-flex h-5 w-9 items-center rounded-full border border-border p-0.5 transition-colors",
+    temaEscuro ? "bg-foreground" : "bg-muted"
+  )
+  const togglePinoClasses = cn(
+    "h-4 w-4 rounded-full bg-background transition-transform",
+    temaEscuro ? "translate-x-4" : "translate-x-0"
+  )
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-card px-6">
@@ -129,16 +153,84 @@ export function Cabecalho({ onToggleSidebar }: CabecalhoProps) {
       {/* Notifications */}
       <DropdownNotificacoes />
 
-      {/* User avatar */}
-      <Link
-        href="/perfil"
-        className="hidden lg:block"
-        aria-label={`Perfil de ${nomeUsuario}`}
-      >
-        <Avatar tamanho="sm">
-          <AvatarFallback>{iniciaisUsuario}</AvatarFallback>
-        </Avatar>
-      </Link>
+      {/* User avatar with dropdown */}
+      <MenuSuspenso>
+        <MenuSuspensoGatilho asChild>
+          <Botao
+            variant="ghost"
+            size="icon"
+            className="hidden lg:flex"
+            aria-label="Menu do usuario"
+          >
+            <Avatar tamanho="sm">
+              <AvatarFallback>{iniciaisUsuario}</AvatarFallback>
+            </Avatar>
+          </Botao>
+        </MenuSuspensoGatilho>
+        <MenuSuspensoConteudo
+          side="bottom"
+          align="end"
+          sideOffset={8}
+          className="w-56"
+        >
+          <MenuSuspensoItem className="cursor-pointer gap-2 font-medium">
+            <Bell
+              className="h-4 w-4 text-muted-foreground"
+              aria-hidden="true"
+            />
+            Notificações
+          </MenuSuspensoItem>
+          <MenuSuspensoItem
+            onSelect={(event) => {
+              event.preventDefault()
+              alternarTema()
+            }}
+            className="flex cursor-pointer items-center justify-between font-medium"
+          >
+            <span className="flex items-center gap-2">
+              {temaEscuro ? (
+                <Moon
+                  className="h-4 w-4 text-muted-foreground"
+                  aria-hidden="true"
+                />
+              ) : (
+                <Sun
+                  className="h-4 w-4 text-muted-foreground"
+                  aria-hidden="true"
+                />
+              )}
+              Tema
+            </span>
+            <span aria-hidden="true" className={toggleTemaClasses}>
+              <span className={togglePinoClasses} />
+            </span>
+          </MenuSuspensoItem>
+          <MenuSuspensoItem
+            asChild
+            className="cursor-pointer gap-2 font-medium"
+          >
+            <Link
+              href="/perfil"
+              className="flex w-full items-center gap-2"
+              aria-label="Ir para perfil do usuário"
+            >
+              <UserRound
+                className="h-4 w-4 text-muted-foreground"
+                aria-hidden="true"
+              />
+              Perfil
+            </Link>
+          </MenuSuspensoItem>
+          <MenuSuspensoSeparador />
+          <MenuSuspensoItem
+            onSelect={signOut}
+            className="cursor-pointer gap-2 font-medium text-destructive focus:text-destructive"
+          >
+            <LogOut className="h-4 w-4" aria-hidden="true" />
+            Sair
+          </MenuSuspensoItem>
+        </MenuSuspensoConteudo>
+      </MenuSuspenso>
     </header>
   )
 }

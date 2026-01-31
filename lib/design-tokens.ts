@@ -74,12 +74,12 @@ export const coresGraficos = {
 
 export const coresSidebar = {
   claro: {
-    fundo: '#FAFAFA',
+    fundo: '#FFFFFF',
     foreground: '#1A1A1A',
     primaria: '#F26B2A',
     primariaForeground: '#FFFFFF',
-    accent: '#FEF0E8',
-    accentForeground: '#C04F1A',
+    accent: '#F26B2A',
+    accentForeground: '#FFFFFF',
     borda: '#E8E8E8',
   },
   escuro: {
@@ -87,8 +87,8 @@ export const coresSidebar = {
     foreground: '#F5F5F5',
     primaria: '#F26B2A',
     primariaForeground: '#FFFFFF',
-    accent: '#3D2415',
-    accentForeground: '#FDBA74',
+    accent: '#F26B2A',
+    accentForeground: '#FFFFFF',
     borda: '#333333',
   },
 } as const;

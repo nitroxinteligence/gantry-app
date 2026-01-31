@@ -36,40 +36,33 @@ export function SecaoAgendaDia({ eventos }: PropsSecaoAgendaDia) {
           Nenhum evento agendado para hoje.
         </p>
       ) : (
-        <div className="mt-4 space-y-3">
+        <div className="mt-4 space-y-2">
           {eventos.map((evento, i) => (
             <motion.div
               key={evento.id}
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, delay: 0.45 + i * 0.05 }}
-              className="flex items-start gap-3"
+              className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3"
             >
-              <div className="flex flex-col items-center">
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{ backgroundColor: evento.cor || "var(--primary)" }}
-                />
-                {i < eventos.length - 1 ? (
-                  <div className="mt-1 h-8 w-px bg-border" />
-                ) : null}
-              </div>
-              <div className="flex-1">
-                <div className="flex items-baseline justify-between gap-2">
-                  <p className="text-sm font-medium text-foreground">
-                    {evento.titulo}
-                  </p>
-                  <span className="shrink-0 text-xs text-muted-foreground">
-                    {evento.horario}
-                  </span>
-                </div>
+              <span
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ backgroundColor: evento.cor || "var(--primary)" }}
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-foreground">
+                  {evento.titulo}
+                </p>
                 {evento.local ? (
                   <div className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
-                    <MapPin className="h-3 w-3" />
-                    {evento.local}
+                    <MapPin className="h-3 w-3 shrink-0" />
+                    <span className="truncate">{evento.local}</span>
                   </div>
                 ) : null}
               </div>
+              <span className="shrink-0 text-xs font-medium text-muted-foreground">
+                {evento.horario}
+              </span>
             </motion.div>
           ))}
         </div>

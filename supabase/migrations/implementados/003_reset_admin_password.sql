@@ -1,13 +1,18 @@
 -- ============================================================================
--- BUILDERS PERFORMANCE - RESET ADMIN PASSWORD
+-- BUILDERS PERFORMANCE - RESET USER PASSWORD (TEMPLATE)
 -- ============================================================================
--- Execute este SQL no Supabase Dashboard > SQL Editor
--- A nova senha será exibida como resultado da query
+-- ⚠️  SCRIPT OPERACIONAL - NÃO EXECUTAR SEM AJUSTAR VARIÁVEIS
+-- ⚠️  Este script foi sanitizado para remover credenciais hardcoded.
+--     Substitua o placeholder antes de executar manualmente no SQL Editor.
 --
--- Data: 2026-01-28
+-- Data original: 2026-01-28
 -- ============================================================================
 
--- Primeiro, gere a nova senha e veja o resultado
+-- INSTRUÇÕES:
+-- 1. Substitua '<USER_EMAIL>' pelo email do usuário
+-- 2. Execute no Supabase Dashboard > SQL Editor
+-- 3. A nova senha será exibida - SALVE IMEDIATAMENTE
+
 WITH new_password AS (
   SELECT encode(gen_random_bytes(12), 'base64') AS senha
 ),
@@ -16,12 +21,11 @@ update_user AS (
   SET
     encrypted_password = crypt((SELECT senha FROM new_password), gen_salt('bf')),
     updated_at = NOW()
-  WHERE email = 'admin@buildersperformance.com'
+  WHERE email = '<USER_EMAIL>'
   RETURNING id, email
 )
 SELECT
   u.id AS user_id,
   u.email,
-  p.senha AS nova_senha,
-  '⚠️ SALVE ESTA SENHA AGORA!' AS aviso
+  p.senha AS nova_senha
 FROM update_user u, new_password p;

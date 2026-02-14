@@ -1,19 +1,26 @@
 -- ============================================================================
--- BUILDERS PERFORMANCE - CREATE ADMIN USER
+-- BUILDERS PERFORMANCE - CREATE ADMIN USER (TEMPLATE)
 -- ============================================================================
--- Execute este SQL no Supabase Dashboard > SQL Editor
--- A senha será exibida como resultado da query!
+-- ⚠️  SCRIPT OPERACIONAL - NÃO EXECUTAR EM PRODUÇÃO SEM AJUSTAR VARIÁVEIS
+-- ⚠️  Este script foi sanitizado para remover credenciais hardcoded.
+--     Substitua os placeholders antes de executar manualmente no SQL Editor.
 --
--- Data: 2026-01-28
+-- Data original: 2026-01-28
 -- ============================================================================
+
+-- INSTRUÇÕES:
+-- 1. Substitua '<ADMIN_EMAIL>' pelo email desejado
+-- 2. Substitua '<ADMIN_NAME>' pelo nome desejado
+-- 3. Execute no Supabase Dashboard > SQL Editor
+-- 4. A senha gerada será exibida como resultado - SALVE IMEDIATAMENTE
 
 WITH
 -- 1. Gerar dados do novo usuário
 new_user_data AS (
   SELECT
     gen_random_uuid() AS user_id,
-    'admin@buildersperformance.com' AS email,
-    'Admin Builders' AS full_name,
+    '<ADMIN_EMAIL>' AS email,
+    '<ADMIN_NAME>' AS full_name,
     encode(gen_random_bytes(12), 'base64') AS password
 ),
 
@@ -45,8 +52,8 @@ inserted_user AS (
     email,
     crypt(password, gen_salt('bf')),
     NOW(),
-    '{"provider": "email", "providers": ["email"], "role": "admin"}'::jsonb,
-    jsonb_build_object('full_name', full_name, 'role', 'admin'),
+    '{"provider": "email", "providers": ["email"]}'::jsonb,
+    jsonb_build_object('full_name', full_name),
     false,
     NOW(),
     NOW(),
@@ -105,11 +112,9 @@ inserted_profile AS (
   RETURNING id
 )
 
--- 5. RESULTADO: Mostrar credenciais
+-- 5. RESULTADO: Mostrar credenciais geradas
 SELECT
-  '✅ USUÁRIO CRIADO!' AS status,
   n.email,
   n.password AS senha,
-  n.user_id::text AS user_id,
-  '⚠️ SALVE A SENHA AGORA!' AS aviso
+  n.user_id::text AS user_id
 FROM new_user_data n;

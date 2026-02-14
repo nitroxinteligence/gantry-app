@@ -244,8 +244,8 @@ export default function PaginaAgenda() {
 
   return (
     <>
-      <main id="main-content" className="flex-1 px-6 py-10">
-        <AnimacaoPagina className="mx-auto flex w-full max-w-6xl flex-col gap-8">
+      <main id="main-content" className="flex-1 px-4 py-6 sm:px-6 sm:py-10">
+        <AnimacaoPagina className="mx-auto flex w-full max-w-6xl flex-col gap-6 sm:gap-8">
           <SecaoAnimada className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div>
@@ -261,7 +261,7 @@ export default function PaginaAgenda() {
             </Botao>
           </SecaoAnimada>
 
-          <SecaoAnimada className="grid gap-6 md:grid-cols-[minmax(0,1fr)_280px] lg:grid-cols-[minmax(0,1fr)_320px]">
+          <SecaoAnimada className="grid gap-6 md:grid-cols-[minmax(0,1fr)_280px] lg:grid-cols-[minmax(0,1fr)_320px]" style={{ gridAutoFlow: "dense" }}>
             <ListaEventosDia
               dataSelecionada={dataSelecionada}
               eventosDoDia={eventosDoDia}

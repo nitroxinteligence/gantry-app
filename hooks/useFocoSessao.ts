@@ -10,6 +10,7 @@ import {
   getAvailableTasks,
   getFocusStats,
   markTaskAsCompleted,
+  savePartialSession,
   updateFocusSession,
 } from "@/app/(protegido)/foco/actions"
 import type {
@@ -474,19 +475,15 @@ export function useFocoSessao(options: UseFocoSessaoOptions): UseFocoSessaoRetur
     salvarEstadoLocal,
   ])
 
-  // sendBeacon on page unload
+  // Save session on page unload
   React.useEffect(() => {
     const handleBeforeUnload = () => {
       if (sessionId && sessaoIniciada && tempoFocadoAtual > 0) {
-        const payload = JSON.stringify({
+        savePartialSession({
           sessionId,
           duracaoReal: tempoFocadoAtual,
           pausas,
         })
-        navigator.sendBeacon?.(
-          "/api/foco/save-partial",
-          new Blob([payload], { type: "application/json" })
-        )
       }
     }
 

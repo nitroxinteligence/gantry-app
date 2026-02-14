@@ -1,0 +1,12 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+sse-starlette==2.2.1
+google-genai==1.33.0
+supabase==2.11.0
+redis[hiredis]==5.2.1
+pyjwt==2.10.1
+python-multipart==0.0.18
+apscheduler==3.10.4
+pydantic==2.10.4
+pydantic-settings==2.7.1
+httpx==0.28.1

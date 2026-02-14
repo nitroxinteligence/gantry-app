@@ -15,6 +15,8 @@ const PROTECTED_ROUTES = [
 
 const AUTH_ROUTES = ["/entrar", "/criar-conta"]
 
+const ADMIN_PROTECTED_ROUTES = ["/admin/dashboard", "/admin/cursos", "/admin/usuarios", "/admin/notificacoes"]
+
 function isProtectedRoute(pathname: string): boolean {
   return PROTECTED_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
@@ -23,6 +25,12 @@ function isProtectedRoute(pathname: string): boolean {
 
 function isAuthRoute(pathname: string): boolean {
   return AUTH_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  )
+}
+
+function isAdminRoute(pathname: string): boolean {
+  return ADMIN_PROTECTED_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   )
 }
@@ -57,6 +65,10 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
+  if (!user && isAdminRoute(pathname)) {
+    return NextResponse.redirect(new URL("/admin/entrar", request.url))
+  }
+
   if (!user && isProtectedRoute(pathname)) {
     const redirectUrl = new URL("/entrar", request.url)
     redirectUrl.searchParams.set("redirectTo", pathname)
@@ -83,5 +95,6 @@ export const config = {
     "/cursos/:path*",
     "/entrar/:path*",
     "/criar-conta/:path*",
+    "/admin/:path*",
   ],
 }

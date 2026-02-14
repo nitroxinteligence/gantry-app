@@ -32,7 +32,7 @@ export function TarefaCard({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           style={provided.draggableProps.style}
-          className="rounded-[var(--radius)] border border-[color:var(--borda-cartao)] bg-[#F9F9F9] p-4 transition-all duration-200 hover:shadow-sm dark:bg-card"
+          className="rounded-[var(--radius)] border border-[color:var(--borda-cartao)] bg-card p-4 transition-all duration-200 hover:shadow-sm"
         >
           <div className="flex items-start justify-between gap-2">
             <Emblema

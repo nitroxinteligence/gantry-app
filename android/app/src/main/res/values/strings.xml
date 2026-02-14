@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Builders Performance</string>
+    <string name="title_activity_main">Builders Performance</string>
+    <string name="package_name">com.builders.performance</string>
+    <string name="custom_url_scheme">com.builders.performance</string>
+</resources>

@@ -1,10 +1,6 @@
-"use server"
-
-import { revalidatePath } from "next/cache"
-import { createClient } from "@supabase/supabase-js"
 import { z } from "zod"
 
-import { getCurrentUserId } from "@/lib/supabase/server"
+import { supabase } from "@/lib/supabase"
 import {
   focusModeMap,
   focusModeReverseMap,
@@ -38,7 +34,7 @@ import type {
 const createSessionSchema = z.object({
   taskId: z.string().uuid().nullable(),
   modo: z.string().min(1),
-  duracaoPlanejada: z.number().int().min(60).max(10800), // 1 min to 3 hours in seconds
+  duracaoPlanejada: z.number().int().min(60).max(10800),
 })
 
 const updateSessionSchema = z.object({
@@ -67,28 +63,24 @@ const savePartialSchema = z.object({
   })),
 })
 
-// Create Supabase admin client directly (bypasses RLS)
-function createAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+// ============================================================================
+// AUTH HELPER
+// ============================================================================
 
-  if (!url || !key) {
-    throw new Error("Missing Supabase environment variables")
+async function getCurrentUserId(): Promise<string> {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    throw new Error("Usuário não autenticado")
   }
-
-  return createClient(url, key)
+  return user.id
 }
 
 // ============================================================================
 // TASKS
 // ============================================================================
 
-/**
- * Get available tasks for focus selection (not completed)
- */
 export async function getAvailableTasks(): Promise<ActionResponse<FocusTask[]>> {
   try {
-    const supabase = createAdminClient()
     const userId = await getCurrentUserId()
 
     const { data, error } = await supabase
@@ -123,14 +115,10 @@ export async function getAvailableTasks(): Promise<ActionResponse<FocusTask[]>> 
   }
 }
 
-/**
- * Mark a task as completed
- */
 export async function markTaskAsCompleted(
   taskId: string
 ): Promise<ActionResponse> {
   try {
-    const supabase = createAdminClient()
     const userId = await getCurrentUserId()
 
     const { error } = await supabase
@@ -146,9 +134,6 @@ export async function markTaskAsCompleted(
       return { success: false, error: error.message }
     }
 
-    revalidatePath("/foco")
-    revalidatePath("/tarefas")
-
     return { success: true }
   } catch (error) {
     return {
@@ -162,9 +147,6 @@ export async function markTaskAsCompleted(
 // FOCUS SESSIONS
 // ============================================================================
 
-/**
- * Create a new focus session
- */
 export async function createFocusSession(
   input: CreateFocusSessionInput
 ): Promise<ActionResponse<{ sessionId: string }>> {
@@ -174,13 +156,10 @@ export async function createFocusSession(
       return { success: false, error: "Dados inválidos para criar sessão" }
     }
 
-    const supabase = createAdminClient()
     const userId = await getCurrentUserId()
 
-    // Cancel any active sessions first
     await supabase.rpc("cancel_active_sessions", { p_user_id: userId })
 
-    // Map UI mode to DB enum
     const dbMode = focusModeMap[validated.data.modo] ?? "pomodoro"
 
     const { data, error } = await supabase
@@ -210,9 +189,6 @@ export async function createFocusSession(
   }
 }
 
-/**
- * Update a focus session (status, pauses, etc.)
- */
 export async function updateFocusSession(
   input: UpdateFocusSessionInput
 ): Promise<ActionResponse> {
@@ -222,7 +198,6 @@ export async function updateFocusSession(
       return { success: false, error: "Dados inválidos para atualizar sessão" }
     }
 
-    const supabase = createAdminClient()
     const userId = await getCurrentUserId()
 
     const updateData: Record<string, unknown> = {}
@@ -256,9 +231,6 @@ export async function updateFocusSession(
   }
 }
 
-/**
- * Complete a focus session and award XP
- */
 export async function completeFocusSession(
   input: CompleteFocusSessionInput
 ): Promise<
@@ -275,8 +247,6 @@ export async function completeFocusSession(
       return { success: false, error: "Dados inválidos para completar sessão" }
     }
 
-    const supabase = createAdminClient()
-
     const { data, error } = await supabase.rpc("complete_focus_session", {
       p_session_id: validated.data.sessionId,
       p_duration_real: validated.data.duracaoReal,
@@ -292,9 +262,6 @@ export async function completeFocusSession(
       new_level: number
       level_up: boolean
     }
-
-    revalidatePath("/foco")
-    revalidatePath("/inicio")
 
     return {
       success: true,
@@ -313,14 +280,10 @@ export async function completeFocusSession(
   }
 }
 
-/**
- * Cancel a focus session
- */
 export async function cancelFocusSession(
   sessionId: string
 ): Promise<ActionResponse> {
   try {
-    const supabase = createAdminClient()
     const userId = await getCurrentUserId()
 
     const { error } = await supabase
@@ -336,8 +299,6 @@ export async function cancelFocusSession(
       return { success: false, error: error.message }
     }
 
-    revalidatePath("/foco")
-
     return { success: true }
   } catch (error) {
     return {
@@ -347,9 +308,6 @@ export async function cancelFocusSession(
   }
 }
 
-/**
- * Save partial session (used when user closes the page)
- */
 export async function savePartialSession(
   input: SavePartialSessionInput
 ): Promise<ActionResponse> {
@@ -359,11 +317,8 @@ export async function savePartialSession(
       return { success: false, error: "Dados inválidos para salvar sessão parcial" }
     }
 
-    const supabase = createAdminClient()
     const userId = await getCurrentUserId()
 
-    // If duration is > 0, complete the session with partial time
-    // Otherwise just cancel it
     if (validated.data.duracaoReal > 0) {
       const { error } = await supabase.rpc("complete_focus_session", {
         p_session_id: validated.data.sessionId,
@@ -399,9 +354,6 @@ export async function savePartialSession(
   }
 }
 
-/**
- * Get active session for the user (if any)
- */
 export async function getActiveSession(): Promise<
   ActionResponse<{
     id: string
@@ -414,7 +366,6 @@ export async function getActiveSession(): Promise<
   } | null>
 > {
   try {
-    const supabase = createAdminClient()
     const userId = await getCurrentUserId()
 
     const { data, error } = await supabase
@@ -469,18 +420,13 @@ export async function getActiveSession(): Promise<
 // HISTORY & STATS
 // ============================================================================
 
-/**
- * Get focus session history with filters and pagination
- */
 export async function getFocusHistory(
   filters: FocusHistoryFilters = {},
   pagination: PaginationOptions = { page: 1, limit: 10 }
 ): Promise<ActionResponse<PaginatedResponse<FocusHistoryItem>>> {
   try {
-    const supabase = createAdminClient()
     const userId = await getCurrentUserId()
 
-    // Build query
     let query = supabase
       .from("focus_sessions")
       .select(
@@ -504,7 +450,6 @@ export async function getFocusHistory(
       .eq("status", "completed")
       .order("started_at", { ascending: false })
 
-    // Apply filters
     if (filters.modo) {
       query = query.eq("modo", filters.modo)
     }
@@ -515,7 +460,6 @@ export async function getFocusHistory(
       query = query.lte("started_at", filters.dataFim)
     }
 
-    // Apply pagination
     const from = (pagination.page - 1) * pagination.limit
     const to = from + pagination.limit - 1
     query = query.range(from, to)
@@ -539,7 +483,6 @@ export async function getFocusHistory(
     }
 
     const items: FocusHistoryItem[] = ((data ?? []) as unknown as SessionRow[]).map((session) => {
-      // Handle both single task object and array from Supabase
       const taskData = Array.isArray(session.tasks) ? session.tasks[0] : session.tasks
       const modoKey = focusModeReverseMap[session.modo] ?? session.modo
 
@@ -582,12 +525,8 @@ export async function getFocusHistory(
   }
 }
 
-/**
- * Get focus statistics for the user
- */
 export async function getFocusStats(): Promise<ActionResponse<FocusStatsDisplay>> {
   try {
-    const supabase = createAdminClient()
     const userId = await getCurrentUserId()
 
     const { data, error } = await supabase.rpc("get_focus_stats", {
@@ -609,7 +548,6 @@ export async function getFocusStats(): Promise<ActionResponse<FocusStatsDisplay>
       seconds_this_week: number
     }
 
-    // Convert to display format
     const totalMinutes = Math.floor(stats.total_seconds / 60)
     const totalHours = Math.floor(totalMinutes / 60)
     const remainingMinutes = totalMinutes % 60
@@ -651,9 +589,6 @@ export async function getFocusStats(): Promise<ActionResponse<FocusStatsDisplay>
 // USER
 // ============================================================================
 
-/**
- * Get current user info
- */
 export async function getCurrentUser(): Promise<
   ActionResponse<{
     id: string
@@ -664,7 +599,6 @@ export async function getCurrentUser(): Promise<
   }>
 > {
   try {
-    const supabase = createAdminClient()
     const userId = await getCurrentUserId()
 
     const { data, error } = await supabase

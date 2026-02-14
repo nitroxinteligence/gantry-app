@@ -36,7 +36,7 @@ export function BottomTabBar() {
                 href={tab.href}
                 aria-current={ativo ? "page" : undefined}
                 className={cn(
-                  "flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 py-2 text-[10px] font-medium transition-colors",
+                  "flex min-h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-medium transition-colors active:scale-[0.96]",
                   ativo
                     ? "text-primary"
                     : "text-muted-foreground active:text-foreground"
@@ -53,7 +53,7 @@ export function BottomTabBar() {
             onClick={() => setDrawerAberto(true)}
             aria-label="Mais opções"
             className={cn(
-              "flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 py-2 text-[10px] font-medium transition-colors",
+              "flex min-h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-medium transition-colors active:scale-[0.96]",
               maisAtivo
                 ? "text-primary"
                 : "text-muted-foreground active:text-foreground"
@@ -95,7 +95,7 @@ export function BottomTabBar() {
                     onClick={() => setDrawerAberto(false)}
                     aria-current={ativo ? "page" : undefined}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors",
+                      "flex min-h-[48px] items-center gap-3 rounded-xl px-3 text-sm font-semibold transition-colors active:scale-[0.98]",
                       ativo
                         ? "bg-sidebar-accent text-sidebar-primary"
                         : "text-muted-foreground hover:bg-secondary/60 hover:text-secondary-foreground"
@@ -116,7 +116,7 @@ export function BottomTabBar() {
                   rotaAtiva(pathname, "/perfil") ? "page" : undefined
                 }
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors",
+                  "flex min-h-[48px] items-center gap-3 rounded-xl px-3 text-sm font-semibold transition-colors active:scale-[0.98]",
                   rotaAtiva(pathname, "/perfil")
                     ? "bg-sidebar-accent text-sidebar-primary"
                     : "text-muted-foreground hover:bg-secondary/60 hover:text-secondary-foreground"

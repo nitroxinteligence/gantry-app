@@ -191,7 +191,7 @@ export default function PaginaAssistente() {
 
   return (
     <>
-      <aside className="w-full border-b border-border bg-sidebar p-6 lg:fixed lg:left-0 lg:top-0 lg:z-30 lg:h-screen lg:w-64 lg:border-b-0 lg:border-r lg:transition-all lg:duration-300">
+      <aside className="w-full border-b border-border bg-sidebar p-4 sm:p-6 lg:fixed lg:left-0 lg:top-0 lg:z-30 lg:h-screen lg:w-64 lg:border-b-0 lg:border-r lg:transition-all lg:duration-300">
           <ProvedorDica delayDuration={150} skipDelayDuration={0}>
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between">
@@ -261,7 +261,7 @@ export default function PaginaAssistente() {
 
         <main
           className={cn(
-            "flex-1 px-6 pt-10 pb-20 lg:transition-[padding] lg:duration-300",
+            "flex-1 px-4 pt-6 pb-24 sm:px-6 sm:pt-10 sm:pb-20 lg:transition-[padding] lg:duration-300",
             "lg:pl-72 lg:ml-0"
           )}
         >
@@ -371,7 +371,7 @@ export default function PaginaAssistente() {
           </div>
         </main>
 
-      <div className="fixed bottom-6 left-0 right-0 z-30 px-6 lg:pl-8">
+      <div className="fixed bottom-[env(safe-area-inset-bottom,0px)] left-0 right-0 z-30 px-4 pb-4 sm:bottom-6 sm:px-6 sm:pb-0 lg:pl-8">
         <div className="mx-auto w-full max-w-3xl lg:pl-64">
           <input
             ref={inputArquivoRef}

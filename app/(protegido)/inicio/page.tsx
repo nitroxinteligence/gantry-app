@@ -221,7 +221,7 @@ function ConteudoPaginaInicio() {
       </Dialogo>
 
       {/* Main Dashboard Content */}
-      <AnimacaoPagina className="flex-1 px-6 py-8 lg:px-8" role="main" aria-label="Conteudo principal do painel">
+      <AnimacaoPagina className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8" role="main" aria-label="Conteudo principal do painel">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
 
           {/* Header: Greeting */}

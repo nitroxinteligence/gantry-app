@@ -24,9 +24,10 @@ import { useUserLevel } from "@/hooks/useDashboard"
 
 interface CabecalhoProps {
   onToggleSidebar?: () => void
+  onOpenMobileSidebar?: () => void
 }
 
-export function Cabecalho({ onToggleSidebar }: CabecalhoProps) {
+export function Cabecalho({ onToggleSidebar, onOpenMobileSidebar }: CabecalhoProps) {
   const pathname = usePathname()
   const { user, signOut } = useAuth()
   const { resolvedTheme, setTheme } = useTheme()
@@ -61,13 +62,13 @@ export function Cabecalho({ onToggleSidebar }: CabecalhoProps) {
   )
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-card px-6">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-card px-4 pt-[env(safe-area-inset-top,0px)] lg:h-16 lg:gap-4 lg:px-6">
       {/* Mobile sidebar toggle */}
       <Botao
         variant="ghost"
         size="icon"
-        className="lg:hidden"
-        onClick={onToggleSidebar}
+        className="h-11 w-11 lg:hidden"
+        onClick={onOpenMobileSidebar}
         aria-label="Abrir menu"
       >
         <Menu className="h-5 w-5" aria-hidden="true" />

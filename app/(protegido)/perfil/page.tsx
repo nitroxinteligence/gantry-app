@@ -165,8 +165,8 @@ export default function PaginaPerfil() {
   ];
 
   return (
-    <main id="main-content" className="flex-1 px-6 py-10">
-      <AnimacaoPagina className="mx-auto flex w-full max-w-6xl flex-col gap-8">
+    <main id="main-content" className="flex-1 px-4 py-6 sm:px-6 sm:py-10">
+      <AnimacaoPagina className="mx-auto flex w-full max-w-6xl flex-col gap-6 sm:gap-8">
         <SecaoAnimada className="flex items-center gap-3">
           <div>
             <h1 className="font-titulo text-2xl font-semibold">Perfil</h1>
@@ -177,7 +177,7 @@ export default function PaginaPerfil() {
         </SecaoAnimada>
 
         <SecaoAnimada className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-          <div className="space-y-6">
+          <div className="order-2 space-y-6 lg:order-1">
             {/* Informações pessoais */}
             <Cartao>
               <CartaoCabecalho>
@@ -353,7 +353,7 @@ export default function PaginaPerfil() {
             </Cartao>
           </div>
 
-          <div className="space-y-4">
+          <div className="order-1 space-y-4 lg:order-2">
             {/* Foto do perfil */}
             <Cartao>
               <CartaoConteudo className="space-y-4 p-5">

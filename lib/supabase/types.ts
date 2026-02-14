@@ -266,6 +266,35 @@ export interface MarcoMeta {
 }
 
 // ==========================================
+// INTERFACES - ASSISTENTE IA
+// ==========================================
+
+export type AutorMensagem = 'usuario' | 'assistente'
+
+export interface Conversa {
+  id: string
+  user_id: string
+  titulo: string
+  ultima_mensagem: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface Mensagem {
+  id: string
+  conversa_id: string
+  autor: AutorMensagem
+  conteudo: string
+  metadata: Json
+  created_at: string
+}
+
+export type ConversaCreate = Omit<Conversa, 'id' | 'created_at' | 'updated_at'>
+export type ConversaUpdate = Partial<Pick<Conversa, 'titulo' | 'ultima_mensagem'>>
+
+export type MensagemCreate = Omit<Mensagem, 'id' | 'created_at'>
+
+// ==========================================
 // INTERFACES - NOTIFICACOES
 // ==========================================
 
@@ -608,6 +637,41 @@ export interface Database {
           concluida_em?: string | null
         }
         Relationships: []
+      }
+      conversas: {
+        Row: Conversa
+        Insert: Omit<Conversa, 'id' | 'created_at' | 'updated_at'> & {
+          id?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: Partial<Pick<Conversa, 'titulo' | 'ultima_mensagem'>>
+        Relationships: [
+          {
+            foreignKeyName: 'conversas_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      mensagens: {
+        Row: Mensagem
+        Insert: Omit<Mensagem, 'id' | 'created_at'> & {
+          id?: string
+          created_at?: string
+        }
+        Update: Partial<Pick<Mensagem, 'conteudo' | 'metadata'>>
+        Relationships: [
+          {
+            foreignKeyName: 'mensagens_conversa_id_fkey'
+            columns: ['conversa_id']
+            isOneToOne: false
+            referencedRelation: 'conversas'
+            referencedColumns: ['id']
+          }
+        ]
       }
       notifications: {
         Row: Notificacao

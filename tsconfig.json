@@ -30,5 +30,21 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "build",
+    "dist",
+    ".aiox-core",
+    ".aios-core",
+    ".aios",
+    ".claude",
+    ".codex",
+    ".cursor",
+    ".gemini",
+    ".antigravity",
+    ".kimi",
+    ".github/agents"
+  ]
 }

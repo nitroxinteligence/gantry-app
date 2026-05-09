@@ -11,7 +11,18 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    "dist/**",
     "next-env.d.ts",
+    ".aiox-core/**",
+    ".aios-core/**",
+    ".aios/**",
+    ".claude/**",
+    ".codex/**",
+    ".cursor/**",
+    ".gemini/**",
+    ".antigravity/**",
+    ".kimi/**",
+    ".github/agents/**",
   ]),
 ]);
 
